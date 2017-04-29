@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# install processing
+
+# install gpio-watch
+
+# setup crontab, startup.py will be called at startup
+
+(crontab -l 2>/dev/null; echo "@reboot python3 /home/pi/kuka-rpi-controller/startup.py >/home/pi/logs/cronlog 2>&1") | crontab -
+
+# fix permissions (git doesn't keep permissions)
+
+# setup networking
+sudo mv /etc/network/interfaces /etc/network/interfaces-default
+sudo cp setup-files/interfaces /etc/network/interfaces
+sudo cp setup-files/interfaces /etc/network/interfaces-kuka

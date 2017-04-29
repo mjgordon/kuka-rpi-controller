@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import RPi.GPIO as GPIO
+import subprocess
+
+# define programs
+
+program_screen = 0
+program_vacuum_gripper = 1
+
+# define pins
+
+#pin_rotary_a = ##
+#pin_rotary_b = ##
+#pin_rotary_button = ##
+
+#pin_reset_button = ##
+
+#pin_led_r = ##
+#pin_led_g = ##
+#pin_led_b = ##
+
+#pin_segment_a = ##
+#pin_segment_b = ##
+#pin_segment etc...
+
+# setup pins
+GPIO.setup(pin_rotary_a, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(pin_rotary_b, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(pin_rotary_button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.setup(pin_reset_button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.setup(pin_led_r,GPIO.OUT)
+GPIO.setup(pin_led_g,GPIO.OUT)
+GPIO.setup(pin_led_b,GPIO.OUT)
+
+GPIO.setup(pin_segment_a,GPIO.OUT)
+# segments etc...
+
+# led is yellow while program is being chosen
+
+GPIO.output(pin_led_r,GPIO.HIGH)
+GPIO.output(pin_led_g,GPIO.HIGH)
+GPIO.output(pin_led_b,GPIO.LOW)
+
+# program is set using rotary encoder
+program_id = -1
+rotary_id = 0
+
+while (program_id == -1):
+    if (GPIO.input(pin_rotary_button) == 0:
+        program_id = rotary_id
+        
+    rotary_a = GPIO.input(pin_rotary_a)
+        rotary_b = GPIO.input(pin_rotary_b)
+
+# led is green during normal program operation
+
+GPIO.output(pin_led_r,GPIO.LOW)
+        GPIO.output(pin_led_g,GPIO.HIGH)
+        GPIO.output(pin_led_b,GPIO.LOW)
+
+# start chosen program
+
+if (program_id == program_screen):
+        subprocess.call(['/home/pi/kuka-rpi-controller/tool-files/screen/scripts/start_gpio_watch'])
+elif (program_id == program_vacuum_gripper):
+        # call screen script 
