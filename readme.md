@@ -1,11 +1,10 @@
 # kuka-rpi-controller
 
-Matt Gordon
-
+The software package for use with the RPi based ethernet controller box for the UVa Architectural Robotics Research Group.
 
 ## Setting up a new RPi
 
-First clone the project into the home directory. Then run 'setup'. This will install some necessary software and set up the pi to connect with the robot over ethernet.
+First clone this repository into the home directory. Then run 'setup'. This will install some necessary software and set up the pi to connect with the robot over ethernet.
 
 ## Usage
 
