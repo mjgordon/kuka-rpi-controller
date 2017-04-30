@@ -5,8 +5,8 @@ import subprocess
 
 # define programs
 
-tool_screen = 0
-tool_vacuum_gripper = 1
+tools = ('tool_screen','tool_vacuum_gripper')
+
 
 # define pins
 
@@ -36,8 +36,10 @@ GPIO.setup(pin_led_r,GPIO.OUT)
 GPIO.setup(pin_led_g,GPIO.OUT)
 GPIO.setup(pin_led_b,GPIO.OUT)
 
-GPIO.setup(pin_segment_a,GPIO.OUT)
-# segments etc...
+GPIO.setup(pin_segment_ser,GPIO.OUT)
+GPIO.setup(pin_segment_rclk,GPIO.OUT)
+GPIO.setup(pin_segment_srclk,GPIO.OUT)
+
 
 # led is yellow while program is being chosen
 
@@ -45,15 +47,46 @@ GPIO.output(pin_led_r,GPIO.HIGH)
 GPIO.output(pin_led_g,GPIO.HIGH)
 GPIO.output(pin_led_b,GPIO.LOW)
 
-# program is set using rotary encoder
+
+# load default tool from file
+
+f = open('default-tool','r')
+line = f.readlines()[0]
+rotary_id = int(line)
+f.close()
+
+
+# tool is set using rotary encoder
+
 tool_id = -1
-rotary_id = 0
+rotary_last_a = GPIO.input(pin_rotary_a)
+rotary_last_b = GPIO.input(pin_rotary_b)
 
 while (tool_id == -1):
-    if (GPIO.input(pin_rotary_button) == 0:
-        tool_id = rotary_id    
-    rotary_a = GPIO.input(pin_rotary_a)
-    rotary_b = GPIO.input(pin_rotary_b)
+    if (GPIO.input(pin_rotary_button) == 0):
+        if (rotary_id < len(tools)):
+            tool_id = rotary_id    
+	    rotary_a = GPIO.input(pin_rotary_a)
+	    rotary_b = GPIO.input(pin_rotary_b)
+    if ((rotary_last_a == GPIO.LOW) && (rotaryA == GPIO.HIGH)):
+        if (rotary_b == GPIO.LOW):
+            rotary_id -= 1
+            if (rotary_id < 0):
+                rotary_id = 9
+        else:
+            rotary_id += 1
+			if (rotary_id > 9):
+                rotary_id = 0
+                
+tool_name = tools[tool_id]
+
+
+# save tool selected as default to file
+
+f = open('default-tool','w')
+f.write(str(tool_id))
+f.close()
+
 
 # led is green during normal program operation
 
@@ -61,9 +94,10 @@ GPIO.output(pin_led_r, GPIO.LOW)
 GPIO.output(pin_led_g, GPIO.HIGH)
 GPIO.output(pin_led_b, GPIO.LOW)
 
-# start chosen program
 
-if (tool_id == program_screen):
-        subprocess.call(['/home/pi/kuka-rpi-controller/tool-files/screen/scripts/start_gpio_watch'])
-elif (tool_id == program_vacuum_gripper):
-        # call screen script 
+# run code for chosen tool
+
+if (tool-name == 'tool-screen'):
+    subprocess.call(['/home/pi/kuka-rpi-controller/tool-files/screen/scripts/start_gpio_watch'])
+elif (tool-name == 'tool-vacuum-gripper'):
+    # call vacuum script 
