@@ -5,31 +5,32 @@ import subprocess
 
 # define programs
 
-program_screen = 0
-program_vacuum_gripper = 1
+tool_screen = 0
+tool_vacuum_gripper = 1
 
 # define pins
 
-#pin_rotary_a = ##
-#pin_rotary_b = ##
-#pin_rotary_button = ##
+pin_rotary_a = 16
+pin_rotary_b = 20
+pin_rotary_button = 21
 
-#pin_reset_button = ##
+pin_reset_button = 12
 
-#pin_led_r = ##
-#pin_led_g = ##
-#pin_led_b = ##
+pin_led_r = 8
+pin_led_g = 7
+pin_led_b = 1
 
-#pin_segment_a = ##
-#pin_segment_b = ##
-#pin_segment etc...
+pin_segment_ser = 25
+pin_segment_rclk = 24
+pin_segment_srclk = 23
+
 
 # setup pins
-GPIO.setup(pin_rotary_a, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(pin_rotary_b, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(pin_rotary_button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(pin_rotary_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(pin_rotary_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(pin_rotary_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-GPIO.setup(pin_reset_button, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(pin_reset_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(pin_led_r,GPIO.OUT)
 GPIO.setup(pin_led_g,GPIO.OUT)
@@ -45,24 +46,24 @@ GPIO.output(pin_led_g,GPIO.HIGH)
 GPIO.output(pin_led_b,GPIO.LOW)
 
 # program is set using rotary encoder
-program_id = -1
+tool_id = -1
 rotary_id = 0
 
-while (program_id == -1):
+while (tool_id == -1):
     if (GPIO.input(pin_rotary_button) == 0:
-        program_id = rotary_id    
+        tool_id = rotary_id    
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
 
 # led is green during normal program operation
 
-GPIO.output(pin_led_r,GPIO.LOW)
-        GPIO.output(pin_led_g,GPIO.HIGH)
-        GPIO.output(pin_led_b,GPIO.LOW)
+GPIO.output(pin_led_r, GPIO.LOW)
+GPIO.output(pin_led_g, GPIO.HIGH)
+GPIO.output(pin_led_b, GPIO.LOW)
 
 # start chosen program
 
-if (program_id == program_screen):
+if (tool_id == program_screen):
         subprocess.call(['/home/pi/kuka-rpi-controller/tool-files/screen/scripts/start_gpio_watch'])
-elif (program_id == program_vacuum_gripper):
+elif (tool_id == program_vacuum_gripper):
         # call screen script 
