@@ -15,7 +15,8 @@ echo "Editing crontab to run startup script at reboot"
 (crontab -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1") | crontab -
 
 echo "Fixing script permissions (git does not keep permissions)"
-
+chmod +x scripts/set-network
+chmod +x scripts/startup
 
 echo "Setting up /etc/network/interfaces files"
 sudo mv /etc/network/interfaces /etc/network/interfaces-default
