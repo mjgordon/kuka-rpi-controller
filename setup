@@ -19,6 +19,13 @@ chmod +x scripts/set-network
 chmod +x scripts/startup
 
 echo "Setting up /etc/network/interfaces files"
-sudo mv /etc/network/interfaces /etc/network/interfaces-default
+#We don't want to accidently override the store default file
+line=$(sed '1!d' /etc/network/interfaces)
+if [$line != "#KUKA"]
+then
+    sudo cp /etc/network/interfaces /etc/network/interfaces-default
+fi
+
+cd /home/pi/kuka-rpi-controller/setup-files
 sudo cp setup-files/interfaces /etc/network/interfaces
 sudo cp setup-files/interfaces /etc/network/interfaces-kuka
