@@ -17,20 +17,17 @@ Arduinos can also be attached directly over USB, and this may be preferable assu
 
 ## Adding new tools
 
-Each tool's code should have its own folder in the tool-files directory. You will also need to edit the startup script so the tool is selectable. At the top, add a new variable in the '# define programs' heading. e.g.
+Each tool's code should have its own folder in the tool-files directory. You will also need to edit the startup script so the tool is selectable. At the top, add a your tool name to the list in the '# define tools' heading. e.g.
 ```
-# define programs
+# define tool
 
-program_screen = 0
-program_vacuum_gripper = 1
-...
-program_my_program = 4
+tools = ('tool-screen','tool-vacuum-gripper','tool-my-tool')
 ```
 
-Then under the 'start chosen program heading', add a new elif statement e.g.
+Then under the 'run code for chosen tool' heading, add a new elif statement e.g.
 ```
-elif (program_id == program_my_program):
-     /home/pi/kuka-rpi-controller/tool-file/my-tool/my-tool-start
+elif (tool-name == 'tool-my-tool'):
+     /home/pi/kuka-rpi-controller/tool-files/my-tool/my-tool-start
 ```
 
 ## Internet Access

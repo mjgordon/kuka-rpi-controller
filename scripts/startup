@@ -3,9 +3,9 @@
 import RPi.GPIO as GPIO
 import subprocess
 
-# define programs
+# define tools
 
-tools = ('tool_screen','tool_vacuum_gripper')
+tools = ('tool-screen','tool-vacuum-gripper')
 
 
 # define pins
