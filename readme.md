@@ -32,3 +32,12 @@ Then under the 'start chosen program heading', add a new elif statement e.g.
 elif (program_id == program_my_program):
      /home/pi/kuka-rpi-controller/tool-file/my-tool/my-tool-start
 ```
+
+## Internet Access
+
+The network setup is intended to allow wifi usage while manually configuring the ethernet connection to the robot. If unable to connect, you can restore the original network settings with this command:
+`scripts/set-network default`
+and then restore it when finished:
+`scripts/set-network kuka`
+
+Note that the RPi will most likely be unable to connect to the University Wifi system.
