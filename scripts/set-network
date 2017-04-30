@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$1" = "default" ]
+then
+    echo "Default network setup"
+    sudo cp /etc/network/interfaces-default /etc/network/interfaces
+elif [ "$1" = "kuka" ]
+then
+    echo "Kuka network setup"
+    sudo cp /etc/network/interfaces-kuka /etc/network/interfaces
+fi

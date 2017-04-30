@@ -50,10 +50,9 @@ rotary_id = 0
 
 while (program_id == -1):
     if (GPIO.input(pin_rotary_button) == 0:
-        program_id = rotary_id
-        
+        program_id = rotary_id    
     rotary_a = GPIO.input(pin_rotary_a)
-        rotary_b = GPIO.input(pin_rotary_b)
+    rotary_b = GPIO.input(pin_rotary_b)
 
 # led is green during normal program operation
 
