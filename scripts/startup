@@ -3,11 +3,6 @@
 import RPi.GPIO as GPIO
 import subprocess
 
-# define tools
-
-tools = ('tool-screen','tool-vacuum-gripper')
-
-
 # define pins
 
 pin_rotary_a = 16
@@ -48,7 +43,15 @@ GPIO.output(pin_led_g,GPIO.HIGH)
 GPIO.output(pin_led_b,GPIO.LOW)
 
 
-# load default tool from file
+# load tool names from file
+
+f = open('../tools.txt','r')
+tool_names = f.readlines()
+for i in range(0,len(tool_names)):
+    tool_names[i] = tool_names[i].rstrip()
+
+    
+# load default tool number from file
 
 f = open('default-tool','r')
 line = f.readlines()[0]
@@ -63,11 +66,8 @@ rotary_last_a = GPIO.input(pin_rotary_a)
 rotary_last_b = GPIO.input(pin_rotary_b)
 
 while (tool_id == -1):
-    if (GPIO.input(pin_rotary_button) == 0):
-        if (rotary_id < len(tools)):
-            tool_id = rotary_id    
-	    rotary_a = GPIO.input(pin_rotary_a)
-	    rotary_b = GPIO.input(pin_rotary_b)
+	rotary_a = GPIO.input(pin_rotary_a)
+	rotary_b = GPIO.input(pin_rotary_b)
     if ((rotary_last_a == GPIO.LOW) && (rotaryA == GPIO.HIGH)):
         if (rotary_b == GPIO.LOW):
             rotary_id -= 1
@@ -77,10 +77,10 @@ while (tool_id == -1):
             rotary_id += 1
 			if (rotary_id > 9):
                 rotary_id = 0
+    if (GPIO.input(pin_rotary_button) == 0):
+        if (rotary_id < len(tool_names)):
+            tool_id = rotary_id    
                 
-tool_name = tools[tool_id]
-
-
 # save tool selected as default to file
 
 f = open('default-tool','w')
@@ -97,7 +97,6 @@ GPIO.output(pin_led_b, GPIO.LOW)
 
 # run code for chosen tool
 
-if (tool-name == 'tool-screen'):
-    subprocess.call(['/home/pi/kuka-rpi-controller/tool-files/screen/scripts/start_gpio_watch'])
-elif (tool-name == 'tool-vacuum-gripper'):
-    # call vacuum script 
+subprocess.call(['../tool-files/' + tool_names[tool_id] + '/start'])
+
+
