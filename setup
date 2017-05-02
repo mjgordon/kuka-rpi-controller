@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo "If Processing is not already installed, it will need to be installed manually"
-
 echo "Installing gpio-watch"
 mkdir ~/build
 cd ~/build
@@ -14,9 +12,10 @@ cp gpio-watch /usr/local/bin/gpio-watch
 echo "Editing crontab to run startup script at reboot"
 (crontab -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1") | crontab -
 
-echo "Fixing script permissions (git does not keep permissions)"
+echo "Fixing script permissions (git does not retain permissions)"
 chmod +x scripts/set-network
 chmod +x scripts/startup
+chmod +x scripts/gpio-watch-scripts/12
 
 echo "Setting up /etc/network/interfaces files"
 #We don't want to accidently override the store default file
@@ -29,3 +28,5 @@ fi
 cd /home/pi/kuka-rpi-controller/setup-files
 sudo cp setup-files/interfaces /etc/network/interfaces
 sudo cp setup-files/interfaces /etc/network/interfaces-kuka
+
+echo "If Processing is not already installed, it will need to be installed manually"

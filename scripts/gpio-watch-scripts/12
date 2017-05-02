@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import time
+import RPi.GPIO as GPIO
+import os
+
+pin_led_r = 8
+pin_led_g = 7
+pin_led_b = 1
+
+# argument 0 contains script name, 1 contains pin number, 2 contains pin state
+# Pins have pullups enabled: 0 is pressed, 1 is released
+pin_state = sys.argv[2]
+
+
+# Save the epoch time in seconds to file. Wait five seconds, then turn the light red.
+if (pin_state == 0):
+    current_time = time.time()
+    f = open('time-stamp.txt','w')
+    f.write(current_time)
+    f.close()
+    time.sleep(5.1)
+    GPIO.output(pin_led_r,GPIO.HIGH)
+    GPIO.output(pin_led_g,GPIO.LOW)
+    GPIO.output(pin_led_b,GPIO.LOW)
+
+
+# Read the timestamp file. Reboot if less than 5 seconds have elapsed and shutdown if more.
+elif (pin_state == 1):
+    current_time = time.time()
+    f = open('time-stamp.txt','r')
+    pressed_time = float(f.readlines()[0])
+    f.close()
+    os.remove('time-stamp.txt')
+    if (current_time - pressed_time < 5):
+        os.system('sudo shutdown -r now')
+    else:
+        os.system('sudo shutdown now')
