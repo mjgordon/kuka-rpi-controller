@@ -48,7 +48,7 @@ GPIO.output(pin_led_b,GPIO.LOW)
 f = open('../tools.txt','r')
 tool_names = f.readlines()
 for i in range(0,len(tool_names)):
-    tool_names[i] = tool_names[i].rstrip()
+    tool_names[i] = tool_names[i].rstrip() # remove newlines
 
     
 # load default tool number from file
@@ -68,7 +68,7 @@ rotary_last_b = GPIO.input(pin_rotary_b)
 while (tool_id == -1):
 	rotary_a = GPIO.input(pin_rotary_a)
 	rotary_b = GPIO.input(pin_rotary_b)
-    if ((rotary_last_a == GPIO.LOW) && (rotaryA == GPIO.HIGH)):
+    if ((rotary_last_a == GPIO.LOW) and (rotaryA == GPIO.HIGH)):
         if (rotary_b == GPIO.LOW):
             rotary_id -= 1
             if (rotary_id < 0):
@@ -80,7 +80,8 @@ while (tool_id == -1):
     if (GPIO.input(pin_rotary_button) == 0):
         if (rotary_id < len(tool_names)):
             tool_id = rotary_id    
-                
+
+            
 # save tool selected as default to file
 
 f = open('default-tool','w')
@@ -98,5 +99,3 @@ GPIO.output(pin_led_b, GPIO.LOW)
 # run code for chosen tool
 
 subprocess.call(['../tool-files/' + tool_names[tool_id] + '/start'])
-
-

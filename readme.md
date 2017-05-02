@@ -2,10 +2,6 @@
 
 The software package for use with the RPi based ethernet controller box for the UVa Architectural Robotics Research Group.
 
-## Setting up a new RPi
-
-First clone this repository into the home directory. Then run 'setup'. This will install some necessary software and set up the pi to connect with the robot over ethernet.
-
 ## Usage
 
 After plugging in the pi, the status LED will turn yellow when ready. Select the program number using the dial, and push it down to select. The status LED will turn green when the program is ready.
@@ -17,18 +13,15 @@ Arduinos can also be attached directly over USB, and this may be preferable assu
 
 ## Adding new tools
 
-Each tool's code should have its own folder in the tool-files directory. You will also need to edit the startup script so the tool is selectable. At the top, add a your tool name to the list in the '# define tools' heading. e.g.
-```
-# define tool
+Each tool's code should have its own folder in the tool-files directory. To make a tool selectable, add the name of the its folder to the 'tools.txt' file. At the very least, the tool folder must contain a script called 'start', which will be automatically run when the tool is selected.
 
-tools = ('tool-screen','tool-vacuum-gripper','tool-my-tool')
-```
+## Setting up a new RPi
 
-Then under the 'run code for chosen tool' heading, add a new elif statement e.g.
+If the Pi or SD card breaks or needs to be upgraded, the SD card will need to be restored from backup, or possibly reconfigured entirely. To re-install in a fresh copy of Raspbian, first copy or clone this repository into the home directory. Then enter the following commands:
+``` cd kuka-rpi-controller
+sh setup
 ```
-elif (tool-name == 'tool-my-tool'):
-     /home/pi/kuka-rpi-controller/tool-files/my-tool/my-tool-start
-```
+This will install some necessary software, configure this software to run at startup, and set up the pi to communicate with the robot or other hardware.
 
 ## Internet Access
 
