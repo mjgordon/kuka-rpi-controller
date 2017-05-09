@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import subprocess
+import time
 
 # define pins
 
@@ -21,6 +22,7 @@ pin_segment_srclk = 23
 
 
 # setup pins
+
 GPIO.setup(pin_rotary_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pin_rotary_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pin_rotary_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -35,6 +37,26 @@ GPIO.setup(pin_segment_ser,GPIO.OUT)
 GPIO.setup(pin_segment_rclk,GPIO.OUT)
 GPIO.setup(pin_segment_srclk,GPIO.OUT)
 
+# setup interrupts to turn off pi when with button press, negates the need for gpio-watch
+
+press_time = time.time()
+
+def reset_pressed():
+    press_time = time.time()
+    time.sleep(5.1)
+    GPIO.output(pin_led_r,GPIO.HIGH)
+    GPIO.output(pin_led_g,GPIO.LOW)
+    GPIO.output(pin_led_b,GPIO.LOW)
+
+def reset_released():
+    current_time = time.time()
+    if (current_time - pressed_time < 5):
+        os.system('sudo shutdown -r now')
+    else:
+        os.system('sudo shutdown now')
+
+GPIO.add_event_detect(pin_reset_button,GPIO.RISING, callback=reset_released)
+GPIO.add_event_detect(pin_reset_button,GPIO.FALLING,callback=reset_pressed)
 
 # led is yellow while program is being chosen
 
@@ -49,13 +71,13 @@ f = open('../tools.txt','r')
 tool_names = f.readlines()
 for i in range(0,len(tool_names)):
     tool_names[i] = tool_names[i].rstrip() # remove newlines
+f.close()
 
     
 # load default tool number from file
 
 f = open('default-tool','r')
-line = f.readlines()[0]
-rotary_id = int(line)
+rotary_id = int(f.readlines()[0])
 f.close()
 
 

@@ -1,14 +1,5 @@
 #!/bin/sh
 
-echo "Installing gpio-watch"
-mkdir ~/build
-cd ~/build
-git clone https://github.com/larsks/gpio-watch.git
-cd gpio-watch
-make
-cp gpio-watch /usr/local/bin/gpio-watch
-
-
 echo "Editing crontab to run startup script at reboot"
 (crontab -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1") | crontab -
 

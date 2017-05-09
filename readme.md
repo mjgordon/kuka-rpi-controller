@@ -18,16 +18,17 @@ Each tool's code should have its own folder in the tool-files directory. To make
 ## Setting up a new RPi
 
 If the Pi or SD card breaks or needs to be upgraded, the SD card will need to be restored from backup, or possibly reconfigured entirely. To re-install in a fresh copy of Raspbian, first copy or clone this repository into the home directory. Then enter the following commands:
-``` cd kuka-rpi-controller
+```
+cd ~/kuka-rpi-controller
 sh setup
 ```
 This will install some necessary software, configure this software to run at startup, and set up the pi to communicate with the robot or other hardware.
 
 ## Internet Access
 
-The network setup is intended to allow wifi usage while manually configuring the ethernet connection to the robot. If unable to connect, you can restore the original network settings with this command:
+The network setup is intended to allow wifi usage while manually configuring the ethernet connection to the robot. If unable to connect, you can restore the original network settings with:
 `scripts/set-network default`,
-and then restor it for robot use when finished:
+and then restore it for robot use when finished:
 `scripts/set-network kuka`
 
 Note that the RPi will most likely be unable to connect to the University Wifi system.
