@@ -103,7 +103,7 @@ while (tool_id == -1):
                 rotary_id = 9
         else:
             rotary_id += 1
-			if (rotary_id > 9):
+            if (rotary_id > 9):
                 rotary_id = 0
         logging.debug('Rotary position: ' + str(rotary_id)
     if (GPIO.input(pin_rotary_button) == 0):
