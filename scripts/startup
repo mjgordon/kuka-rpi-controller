@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import RPi.GPIO as GPIO
 import subprocess
 import time
@@ -20,6 +21,11 @@ pin_segment_ser = 25
 pin_segment_rclk = 24
 pin_segment_srclk = 23
 
+# setup logging
+logging.basicConfig('debug.log',level=logging.DEBUG)
+logging.info('=======')
+logging.info('startup')
+logging.info('=======')
 
 # setup pins
 
@@ -99,9 +105,11 @@ while (tool_id == -1):
             rotary_id += 1
 			if (rotary_id > 9):
                 rotary_id = 0
+        logging.debug('Rotary position: ' + str(rotary_id)
     if (GPIO.input(pin_rotary_button) == 0):
         if (rotary_id < len(tool_names)):
-            tool_id = rotary_id    
+            tool_id = rotary_id
+            logging.debug('Rotary button pressed')
 
             
 # save tool selected as default to file
