@@ -11,9 +11,9 @@ pin_rotary_a = 16
 pin_rotary_b = 20
 pin_rotary_button = 21
 
-pin_reset_button = 12
+pin_reset_button = 8
 
-pin_led_r = 8
+pin_led_r = 12
 pin_led_g = 7
 pin_led_b = 1
 
@@ -22,13 +22,14 @@ pin_segment_rclk = 24
 pin_segment_srclk = 23
 
 # setup logging
-logging.basicConfig('debug.log',level=logging.DEBUG)
+logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 logging.info('=======')
 logging.info('startup')
 logging.info('=======')
 
 # setup pins
 
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(pin_rotary_a, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pin_rotary_b, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pin_rotary_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -105,8 +106,8 @@ while (tool_id == -1):
             rotary_id += 1
             if (rotary_id > 9):
                 rotary_id = 0
-        logging.debug('Rotary position: ' + str(rotary_id)
-    if (GPIO.input(pin_rotary_button) == 0):
+        logging.debug('Rotary position: ' + str(rotary_id))
+    if (GPIO.input(pin_rotary_button) == GPIO.LOW):
         if (rotary_id < len(tool_names)):
             tool_id = rotary_id
             logging.debug('Rotary button pressed')
