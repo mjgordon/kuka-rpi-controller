@@ -94,8 +94,8 @@ rotary_last_a = GPIO.input(pin_rotary_a)
 rotary_last_b = GPIO.input(pin_rotary_b)
 
 while (tool_id == -1):
-	rotary_a = GPIO.input(pin_rotary_a)
-	rotary_b = GPIO.input(pin_rotary_b)
+    rotary_a = GPIO.input(pin_rotary_a)
+    rotary_b = GPIO.input(pin_rotary_b)
     if ((rotary_last_a == GPIO.LOW) and (rotaryA == GPIO.HIGH)):
         if (rotary_b == GPIO.LOW):
             rotary_id -= 1
@@ -126,6 +126,6 @@ GPIO.output(pin_led_g, GPIO.HIGH)
 GPIO.output(pin_led_b, GPIO.LOW)
 
 
-# run code for chosen tool
+# run code for chosen tolo
 
 subprocess.call(['../tool-files/' + tool_names[tool_id] + '/start'])

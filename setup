@@ -1,15 +1,15 @@
 #!/bin/sh
 
 echo "Editing crontab to run startup script at reboot"
-(crontab -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1") | crontab -
+(crontab -u pi -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1\n") | crontab -
+
 
 echo "Fixing script permissions (git does not retain permissions)"
 chmod +x scripts/set-network
 chmod +x scripts/startup
-chmod +x scripts/gpio-watch-scripts/12
 
 echo "Setting up /etc/network/interfaces files"
-#We don't want to accidently override the store default file
+#We don't want to accidently override the stored default file
 line=$(sed '1!d' /etc/network/interfaces)
 if [$line != "#KUKA"]
 then
