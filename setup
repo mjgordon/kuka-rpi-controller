@@ -20,4 +20,15 @@ cd /home/pi/kuka-rpi-controller/setup-files
 sudo cp setup-files/interfaces /etc/network/interfaces
 sudo cp setup-files/interfaces /etc/network/interfaces-kuka
 
+
+echo "Enabling i2c functions and installing i2c packages"
+
+sed -i '4 s/^/#/' /etc/modprobe.d/raspi-blacklist.conf
+echo "i2c-dev" >> /etc/modules
+sudo apt-get update
+sudo apt-get install i2c-tools
+sudo apt-get install python3-smbus
+sudo adduser pi i2c
+
+echo "Pi will need to be rebooted for i2c to be functional"
 echo "If Processing is not already installed, it will need to be installed manually"
