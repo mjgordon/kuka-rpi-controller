@@ -2,7 +2,7 @@
 
 echo "Editing crontab to run startup script at reboot"
 #(crontab -u pi -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1\n") | crontab -
-crontab -l -u pi | cat - setupfiles/crontab-addition.txt | crontab -u pi -
+crontab -l -u pi | cat - setup-files/crontab-addition.txt | crontab -u pi -
 
 echo "Fixing script permissions (git does not retain permissions)"
 chmod +x scripts/set-network
@@ -11,20 +11,20 @@ chmod +x scripts/startup
 echo "Setting up /etc/network/interfaces files"
 #We don't want to accidently override the stored default file
 line=$(sed '1!d' /etc/network/interfaces)
-if [$line != "#KUKA"]
+if [ $line != "#KUKA" ]
 then
     sudo cp /etc/network/interfaces /etc/network/interfaces-default
 fi
 
 cd /home/pi/kuka-rpi-controller/setup-files
-sudo cp setup-files/interfaces /etc/network/interfaces
-sudo cp setup-files/interfaces /etc/network/interfaces-kuka
+sudo cp interfaces /etc/network/interfaces
+sudo cp interfaces /etc/network/interfaces-kuka
 
 
 echo "Enabling i2c functions and installing i2c packages"
 
-sed -i '4 s/^/#/' /etc/modprobe.d/raspi-blacklist.conf
-echo "i2c-dev" >> /etc/modules
+sudo sed -i '4 s/^/#/' /etc/modprobe.d/raspi-blacklist.conf
+echo "i2c-dev" | sudo tee --append /etc/modules
 sudo apt-get update
 sudo apt-get install i2c-tools
 sudo apt-get install python3-smbus
