@@ -14,8 +14,8 @@ pin_rotary_button = 21
 pin_reset_button = 8
 
 pin_led_r = 12
-pin_led_g = 7
-pin_led_b = 1
+pin_led_g = 1
+pin_led_b = 7
 
 pin_segment_ser = 25
 pin_segment_rclk = 24
@@ -48,31 +48,30 @@ GPIO.setup(pin_segment_srclk,GPIO.OUT)
 
 press_time = time.time()
 
-def reset_pressed():
-    press_time = time.time()
-    time.sleep(5.1)
-    GPIO.output(pin_led_r,GPIO.HIGH)
-    GPIO.output(pin_led_g,GPIO.LOW)
-    GPIO.output(pin_led_b,GPIO.LOW)
-
-def reset_released():
-    current_time = time.time()
-    if (current_time - pressed_time < 5):
-        logging.info("rebooting now")
-        os.system('sudo shutdown -r now')
+def reset_changed():
+    button_value = GPIO.input(pin_reset_button)
+    if (button_value == GPIO.LOW):
+        press_time = time.time()
+        time.sleep(5.1)
+        GPIO.output(pin_led_r,GPIO.LOW)
+        GPIO.output(pin_led_g,GPIO.HIGH)
+        GPIO.output(pin_led_b,GPIO.HIGH)
     else:
-        logging.info("shutting down now")
-        os.system('sudo shutdown now')
+        current_time = time.time()
+        if (current_time - pressed_time < 5):
+            logging.info("rebooting now")
+            os.system('sudo shutdown -r now')
+        else:
+            logging.info("shutting down now")
+            os.system('sudo shutdown now')
 
-
-GPIO.add_event_detect(pin_reset_button,GPIO.RISING, callback=reset_released)
-GPIO.add_event_detect(pin_reset_button,GPIO.FALLING,callback=reset_pressed)
+GPIO.add_event_detect(pin_reset_button,GPIO.BOTH, callback=reset_changed)
 
 # led is yellow while program is being chosen
 
-GPIO.output(pin_led_r,GPIO.HIGH)
-GPIO.output(pin_led_g,GPIO.HIGH)
-GPIO.output(pin_led_b,GPIO.LOW)
+GPIO.output(pin_led_r,GPIO.LOW)
+GPIO.output(pin_led_g,GPIO.LOW)
+GPIO.output(pin_led_b,GPIO.HIGH)
 
 
 # load tool names from file
@@ -87,10 +86,10 @@ f.close()
     
 # load default tool number from file
 
-f = open('default-tool','r')
+f = open('default-tool.txt','r')
 rotary_id = int(f.readlines()[0])
 f.close()
-logging.info('default tool is ' + str(rotary_id)
+logging.info('default tool is ' + str(rotary_id))
 
 # tool is set using rotary encoder
 
@@ -120,16 +119,16 @@ while (tool_id == -1):
             
 # save tool selected as default to file
 
-f = open('default-tool','w')
+f = open('default-tool.txt','w')
 f.write(str(tool_id))
 f.close()
 logging.info('selected tool was ' + str(tool_id)
 
 # led is green during normal program operation
 
-GPIO.output(pin_led_r, GPIO.LOW)
-GPIO.output(pin_led_g, GPIO.HIGH)
-GPIO.output(pin_led_b, GPIO.LOW)
+GPIO.output(pin_led_r, GPIO.HIGH)
+GPIO.output(pin_led_g, GPIO.LOW)
+GPIO.output(pin_led_b, GPIO.HIGH)
 
 
 # run code for chosen tolo

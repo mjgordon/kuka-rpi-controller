@@ -25,9 +25,9 @@ echo "Enabling i2c functions and installing i2c packages"
 
 sudo sed -i '4 s/^/#/' /etc/modprobe.d/raspi-blacklist.conf
 echo "i2c-dev" | sudo tee --append /etc/modules > /dev/null
-sudo apt-get update
-sudo apt-get install i2c-tools
-sudo apt-get install python3-smbus
+sudo apt-get -qq update
+sudo apt-get -qq install i2c-tools
+sudo apt-get -qq install python3-smbus
 sudo adduser pi i2c
 
 echo "Pi will need to be rebooted for i2c to be functional"
