@@ -1,1 +1,3 @@
-@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1/n
+@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1
+
+

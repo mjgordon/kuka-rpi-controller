@@ -11,7 +11,7 @@ chmod +x scripts/startup
 echo "Setting up /etc/network/interfaces files"
 #We don't want to accidently override the stored default file
 line=$(sed '1!d' /etc/network/interfaces)
-if [ $line != "#KUKA" ]
+if [ "$line" != "#KUKA" ]
 then
     sudo cp /etc/network/interfaces /etc/network/interfaces-default
 fi
@@ -24,7 +24,7 @@ sudo cp interfaces /etc/network/interfaces-kuka
 echo "Enabling i2c functions and installing i2c packages"
 
 sudo sed -i '4 s/^/#/' /etc/modprobe.d/raspi-blacklist.conf
-echo "i2c-dev" | sudo tee --append /etc/modules
+echo "i2c-dev" | sudo tee --append /etc/modules > /dev/null
 sudo apt-get update
 sudo apt-get install i2c-tools
 sudo apt-get install python3-smbus

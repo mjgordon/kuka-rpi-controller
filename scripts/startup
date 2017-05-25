@@ -58,9 +58,12 @@ def reset_pressed():
 def reset_released():
     current_time = time.time()
     if (current_time - pressed_time < 5):
+        logging.info("rebooting now")
         os.system('sudo shutdown -r now')
     else:
+        logging.info("shutting down now")
         os.system('sudo shutdown now')
+
 
 GPIO.add_event_detect(pin_reset_button,GPIO.RISING, callback=reset_released)
 GPIO.add_event_detect(pin_reset_button,GPIO.FALLING,callback=reset_pressed)
@@ -74,6 +77,7 @@ GPIO.output(pin_led_b,GPIO.LOW)
 
 # load tool names from file
 
+
 f = open('../tools.txt','r')
 tool_names = f.readlines()
 for i in range(0,len(tool_names)):
@@ -86,7 +90,7 @@ f.close()
 f = open('default-tool','r')
 rotary_id = int(f.readlines()[0])
 f.close()
-
+logging.info('default tool is ' + str(rotary_id)
 
 # tool is set using rotary encoder
 
@@ -94,6 +98,7 @@ tool_id = -1
 rotary_last_a = GPIO.input(pin_rotary_a)
 rotary_last_b = GPIO.input(pin_rotary_b)
 
+logging.info('entering select loop')
 while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
@@ -118,7 +123,7 @@ while (tool_id == -1):
 f = open('default-tool','w')
 f.write(str(tool_id))
 f.close()
-
+logging.info('selected tool was ' + str(tool_id)
 
 # led is green during normal program operation
 
