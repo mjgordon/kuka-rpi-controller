@@ -91,6 +91,29 @@ rotary_id = int(f.readlines()[0])
 f.close()
 logging.info('default tool is ' + str(rotary_id))
 
+# define 7 segment control function
+
+def shift_out(data_pin,clock_pin,output_pin,number):
+    #               0          1          2          3          4
+    #               5          6          7          8          9
+    number_codes = (0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,
+                    0b00000000,0b00000000,0b00000000,0b00000000,0b00000000)
+
+    
+    GPIO.output(output_pin,GPIO.LOW)
+    for num in range(0,8):
+        output = false
+        output = data & 0b00000001
+        data = data >> 1
+        GPIO.output(data_pin,output)
+        GPIO.output(clock_pin,GPIO.HIGH)
+        time.sleep(0.01)
+        GPIO.output(clock_pin,GPIO.LOW);
+        time.sleep(0.01)
+    GPIO.output(output_pin,GPIO.HIGH)
+
+
+shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk)
 # tool is set using rotary encoder
 
 tool_id = -1
@@ -122,7 +145,7 @@ while (tool_id == -1):
 f = open('default-tool.txt','w')
 f.write(str(tool_id))
 f.close()
-logging.info('selected tool was ' + str(tool_id)
+logging.info('selected tool was ' + str(tool_id))
 
 # led is green during normal program operation
 
