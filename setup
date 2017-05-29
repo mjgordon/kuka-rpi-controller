@@ -1,8 +1,8 @@
 #!/bin/sh
 
 echo "Editing crontab to run startup script at reboot"
-#(crontab -u pi -l 2>/dev/null; echo "@reboot /home/pi/kuka-rpi-controller/startup >/home/pi/logs/cronlog 2>&1\n") | crontab -
-crontab -l -u pi | cat - setup-files/crontab-addition.txt | crontab -u pi -
+#Trying this for root user, pi user can't seem to use @reboot, we'll see if this messes things up later
+sudo crontab -l -u root | cat - setup-files/crontab-addition.txt | sudo crontab -u root -
 
 echo "Fixing script permissions (git does not retain permissions)"
 chmod +x scripts/set-network
