@@ -1,7 +1,7 @@
 # Digital I/O
 
-| Ribbon Pin | Use / BCM Number |
-| ---------- | ----------------:|
+| Ribbon Pin | Use / RPi Number |
+| ---------- |:---------------- |
 | 1          | 5v               |
 | 2          | Ground           |
 | 3          | BCM 14 (TXD)     |
@@ -9,8 +9,8 @@
 | 5          | BCM 18           |
 | 6          | BCM 17           |
 | 7          | BCM 4            |
-| 8          | BCM 3            |
-| 9          | BCM 2            |
+| 8          | BCM 3 (SCL)      |
+| 9          | BCM 2 (SDA)      |
 | 10         | 3v3              |
 
 
