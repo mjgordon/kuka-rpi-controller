@@ -1,6 +1,6 @@
 # Digital I/O
 
-![Ribbon Header Pinout][images/help-digital-pinout.png)
+![Ribbon Header Pinout](images/help-digital-pinout.png)
 
 | Ribbon Pin | Use / RPi Number |
 | ---------- |:---------------- |
@@ -19,4 +19,4 @@
 The ribbon header has 7 digital pins available (after the 5v, 3v3, and Ground pins). Please note that a Raspberry pi can supply less current per pin, as well as less total current, than an Arduino, and that it operates at a 3v3 logic level. Some devices components (such as relays) may not operate correctly at this voltage, and attempting to input a full 5v will damage the board. Digital input (buttons, switches, etc) should always come from the 3v3 pin, and digital output should be fed through a logic level converter. 
 
 
-![Logic Converter Example][images/help-digital-converter-example.png)
+![Logic Converter Example](images/help-digital-converter-example.png)
