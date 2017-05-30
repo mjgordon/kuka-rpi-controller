@@ -97,7 +97,7 @@ def shift_out(data_pin,clock_pin,output_pin,number):
     #               0          1          2          3          4
     #               5          6          7          8          9
     number_codes = (0b01110111,0b01000001,0b00111011,0b01101011,0b01001101,
-                    0b01101110,0b01111110,0b01000011,0b11111111,0b01001111)
+                    0b01101110,0b01111110,0b01000011,0b01111111,0b01001111)
 
     data = number_codes[number]
     
@@ -127,7 +127,7 @@ while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
     if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH)):
-        if (rotary_b == GPIO.LOW):
+        if (rotary_b == GPIO.HIGH):
             rotary_id -= 1
             if (rotary_id < 0):
                 rotary_id = 9
