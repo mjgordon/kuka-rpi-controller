@@ -141,6 +141,8 @@ while (tool_id == -1):
         if (rotary_id < len(tool_names)):
             tool_id = rotary_id
             logging.debug('Rotary button pressed')
+    rotary_last_a = rotary_a
+    rotary_last_b = rotary_b
 
             
 # save tool selected as default to file
