@@ -117,7 +117,8 @@ def shift_out(data_pin,clock_pin,output_pin,number):
     GPIO.output(output_pin,GPIO.HIGH)
 
 
-shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk)
+shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
+
 # tool is set using rotary encoder
 
 tool_id = -1
