@@ -99,10 +99,11 @@ def shift_out(data_pin,clock_pin,output_pin,number):
     number_codes = (0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,
                     0b00000000,0b00000000,0b00000000,0b00000000,0b00000000)
 
+    data = number_codes[number]
     
     GPIO.output(output_pin,GPIO.LOW)
     for num in range(0,8):
-        output = false
+        output = False
         output = data & 0b00000001
         data = data >> 1
         GPIO.output(data_pin,output)
