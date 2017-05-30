@@ -96,8 +96,8 @@ logging.info('default tool is ' + str(rotary_id))
 def shift_out(data_pin,clock_pin,output_pin,number):
     #               0          1          2          3          4
     #               5          6          7          8          9
-    number_codes = (0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,
-                    0b00000000,0b00000000,0b00000000,0b00000000,0b00000000)
+    number_codes = (0b00000001,0b00000010,0b00000100,0b00001000,0b00010000,
+                    0b00100000,0b01000000,0b10000000,0b11111111,0b00001111)
 
     data = number_codes[number]
     
@@ -136,6 +136,7 @@ while (tool_id == -1):
             if (rotary_id > 9):
                 rotary_id = 0
         logging.debug('Rotary position: ' + str(rotary_id))
+        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
     if (GPIO.input(pin_rotary_button) == GPIO.LOW):
         if (rotary_id < len(tool_names)):
             tool_id = rotary_id
