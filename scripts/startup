@@ -76,7 +76,6 @@ GPIO.output(pin_led_b,GPIO.HIGH)
 
 # load tool names from file
 
-
 f = open('tools.txt','r')
 tool_names = f.readlines()
 for i in range(0,len(tool_names)):
@@ -91,13 +90,14 @@ rotary_id = int(f.readlines()[0])
 f.close()
 logging.info('default tool is ' + str(rotary_id))
 
+
 # define 7 segment control function
 
 def shift_out(data_pin,clock_pin,output_pin,number):
     #               0          1          2          3          4
     #               5          6          7          8          9
-    number_codes = (0b00000001,0b00000010,0b00000100,0b00001000,0b00010000,
-                    0b00100000,0b01000000,0b10000000,0b11111111,0b00001111)
+    number_codes = (0b01110111,0b01000001,0b00111011,0b01101011,0b01001101,
+                    0b01101110,0b01111110,0b01000011,0b11111111,0b01001111)
 
     data = number_codes[number]
     
@@ -113,8 +113,8 @@ def shift_out(data_pin,clock_pin,output_pin,number):
         time.sleep(0.01)
     GPIO.output(output_pin,GPIO.HIGH)
 
-
 shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
+
 
 # tool is set using rotary encoder
 
@@ -126,7 +126,7 @@ logging.info('entering select loop')
 while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
-    if ((rotary_last_a == GPIO.LOW) and (rotaryA == GPIO.HIGH)):
+    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH)):
         if (rotary_b == GPIO.LOW):
             rotary_id -= 1
             if (rotary_id < 0):
@@ -152,6 +152,7 @@ f.write(str(tool_id))
 f.close()
 logging.info('selected tool was ' + str(tool_id))
 
+
 # led is green during normal program operation
 
 GPIO.output(pin_led_r, GPIO.HIGH)
@@ -159,6 +160,10 @@ GPIO.output(pin_led_g, GPIO.LOW)
 GPIO.output(pin_led_b, GPIO.HIGH)
 
 
-# run code for chosen tolo
+# run code for chosen tool
 
 subprocess.call(['tool-files/' + tool_names[tool_id] + '/start'])
+
+
+
+
