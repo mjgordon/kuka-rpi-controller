@@ -21,6 +21,10 @@ pin_segment_ser = 25
 pin_segment_rclk = 24
 pin_segment_srclk = 23
 
+# set directory
+
+cd /home/pi/kuka-rpi-controller/scripts
+
 # setup logging
 logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 logging.info('=======')
