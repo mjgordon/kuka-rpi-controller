@@ -108,9 +108,9 @@ def shift_out(data_pin,clock_pin,output_pin,number):
         data = data >> 1
         GPIO.output(data_pin,output)
         GPIO.output(clock_pin,GPIO.HIGH)
-        time.sleep(0.01)
+        time.sleep(0.001)
         GPIO.output(clock_pin,GPIO.LOW);
-        time.sleep(0.01)
+        time.sleep(0.001)
     GPIO.output(output_pin,GPIO.HIGH)
 
 shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
@@ -135,12 +135,10 @@ while (tool_id == -1):
             rotary_id += 1
             if (rotary_id > 9):
                 rotary_id = 0
-        logging.debug('Rotary position: ' + str(rotary_id))
         shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
     if (GPIO.input(pin_rotary_button) == GPIO.LOW):
         if (rotary_id < len(tool_names)):
             tool_id = rotary_id
-            logging.debug('Rotary button pressed')
     rotary_last_a = rotary_a
     rotary_last_b = rotary_b
 
