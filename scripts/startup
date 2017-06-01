@@ -108,9 +108,9 @@ def shift_out(data_pin,clock_pin,output_pin,number):
         data = data >> 1
         GPIO.output(data_pin,output)
         GPIO.output(clock_pin,GPIO.HIGH)
-        time.sleep(0.001)
+        #time.sleep(0.001)
         GPIO.output(clock_pin,GPIO.LOW);
-        time.sleep(0.001)
+        #time.sleep(0.001)
     GPIO.output(output_pin,GPIO.HIGH)
 
 shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
