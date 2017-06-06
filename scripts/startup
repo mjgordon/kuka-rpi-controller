@@ -127,7 +127,7 @@ logging.info('entering select loop')
 while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
-    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH) and (time.time() - rotary_last_time > .01 )):
+    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH) and (time.time() - rotary_last_time > .1 )):
         if (rotary_b == GPIO.HIGH):
             rotary_id -= 1
             rotary_last_time = time.time()
@@ -178,7 +178,7 @@ def rotary_button_pressed():
         GPIO.output(pin_led_b, GPIO.HIGH)
         shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 0b00000000)
 
-GPIO.add-event_detect(pin_rotary_button,GPIO.PRESSED, callback=rotary_button_pressed)
+GPIO.add_event_detect(pin_rotary_button,GPIO.PRESSED, callback=rotary_button_pressed)
         
 # run code for chosen tool
 
