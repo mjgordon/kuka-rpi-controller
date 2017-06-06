@@ -127,7 +127,7 @@ logging.info('entering select loop')
 while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
-    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH) and (time.time - rotary_last_time > .01 )):
+    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH) and (time.time() - rotary_last_time > .01 )):
         if (rotary_b == GPIO.HIGH):
             rotary_id -= 1
             rotary_last_time = time.time()
