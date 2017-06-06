@@ -22,3 +22,8 @@ GPIO.setup(pin_ribbon_6, GPIO.OUT)
 GPIO.setup(pin_ribbon_7, GPIO.OUT)
 GPIO.setup(pin_ribbon_8, GPIO.OUT)
 GPIO.setup(pin_ribbon_9, GPIO.OUT)
+
+
+while(true):
+    #this will be the network loop
+    
