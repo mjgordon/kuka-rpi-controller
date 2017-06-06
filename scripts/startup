@@ -171,7 +171,8 @@ GPIO.output(pin_led_b, GPIO.HIGH)
 
 lights_on = True
 
-def rotary_button_pressed(var):
+def rotary_button_pressed(channel):
+    global lights_on
     lights_on = not lights_on
     if (lights_on):
         GPIO.output(pin_led_r, GPIO.HIGH)
