@@ -171,7 +171,7 @@ GPIO.output(pin_led_b, GPIO.HIGH)
 
 lights_on = True
 
-def rotary_button_pressed():
+def rotary_button_pressed(var):
     logging.info("lights set to: " + str(lights_on))
     lights_on = not lights_on
     if (lights_on):
