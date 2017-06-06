@@ -101,9 +101,9 @@ logging.info('default tool is ' + str(rotary_id))
 
 def shift_out(data_pin,clock_pin,output_pin,number):
     #               0          1          2          3          4
-    #               5          6          7          8          9
+    #               5          6          7          8          9          OFF
     number_codes = (0b01110111,0b01000001,0b00111011,0b01101011,0b01001101,
-                    0b01101110,0b01111110,0b01000011,0b01111111,0b01001111)
+                    0b01101110,0b01111110,0b01000011,0b01111111,0b01001111,0b00000000)
 
     data = number_codes[number]
     
@@ -186,7 +186,7 @@ def rotary_button_pressed(channel):
         shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 0b00000000)
     logging.info("lights set to: " + str(lights_on))
 
-GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pressed)
+GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pressed,bouncetime=300)
         
 # run code for chosen tool
 
