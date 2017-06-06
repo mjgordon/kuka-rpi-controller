@@ -7,7 +7,7 @@ sudo crontab -l -u root | cat - setup-files/crontab-addition.txt | sudo crontab 
 echo "Fixing script permissions (git does not retain permissions)"
 chmod +x scripts/set-network
 chmod +x scripts/startup
-chmod +x tool-files/generic-digital/start
+chmod +x scripts/tool-permissions
 
 echo "Setting up /etc/network/interfaces files"
 #We don't want to accidently override the stored default file
