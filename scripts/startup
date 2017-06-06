@@ -163,7 +163,7 @@ GPIO.output(pin_led_b, GPIO.HIGH)
 
 # setup interrupt to toggle lights once program starts
 
-lights_on = true
+lights_on = True
 
 def rotary_button_pressed():
     lights_on = not lights_on
