@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find tool-files -name "start.*" -exec chmod +x {} \;
