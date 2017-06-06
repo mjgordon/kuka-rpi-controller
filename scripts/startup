@@ -22,6 +22,7 @@ pin_segment_rclk = 24
 pin_segment_srclk = 23
 
 # setup logging
+open('scripts/debug.log','w').close()
 logging.basicConfig(filename='scripts/debug.log',level=logging.DEBUG)
 logging.info('=======')
 logging.info('startup')
@@ -166,6 +167,7 @@ GPIO.output(pin_led_b, GPIO.HIGH)
 lights_on = True
 
 def rotary_button_pressed():
+    logging.info("lights set to: " + str(lights_on))
     lights_on = not lights_on
     if (lights_on):
         GPIO.output(pin_led_r, GPIO.HIGH)
