@@ -172,7 +172,6 @@ GPIO.output(pin_led_b, GPIO.HIGH)
 lights_on = True
 
 def rotary_button_pressed(var):
-    logging.info("lights set to: " + str(lights_on))
     lights_on = not lights_on
     if (lights_on):
         GPIO.output(pin_led_r, GPIO.HIGH)
@@ -184,6 +183,7 @@ def rotary_button_pressed(var):
         GPIO.output(pin_led_g, GPIO.HIGH)
         GPIO.output(pin_led_b, GPIO.HIGH)
         shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 0b00000000)
+    logging.info("lights set to: " + str(lights_on))
 
 GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pressed)
         

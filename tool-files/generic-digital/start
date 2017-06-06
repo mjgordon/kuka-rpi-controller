@@ -24,6 +24,6 @@ GPIO.setup(pin_ribbon_8, GPIO.OUT)
 GPIO.setup(pin_ribbon_9, GPIO.OUT)
 
 
-while(true):
+while(True):
     #this will be the network loop
     dummy = 1
