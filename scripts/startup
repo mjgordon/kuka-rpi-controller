@@ -183,7 +183,7 @@ def rotary_button_pressed(channel):
         GPIO.output(pin_led_r, GPIO.HIGH)
         GPIO.output(pin_led_g, GPIO.HIGH)
         GPIO.output(pin_led_b, GPIO.HIGH)
-        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 0b00000000)
+        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 10)
     logging.info("lights set to: " + str(lights_on))
 
 GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pressed,bouncetime=300)
