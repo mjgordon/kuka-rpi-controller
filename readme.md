@@ -6,7 +6,7 @@ The software package for use with the RPi based ethernet controller box for the 
 
 After plugging in the pi, the status LED will turn yellow when ready. Select the program number using the dial, and push it down to select. The status LED will turn green when the program is ready.
 
-Do not unplug the pi when it is running, as this could damage the SD card or other components. Press the red button to reboot the pi, or hold it down for five seconds to power it down. The status LED will turn red to indicate shutdown, and will turn off when safe to unplug. Unplug from the wall side rather than RPi side preferably, to reduce wear on the micro-usb port.
+Do not unplug the pi when it is running, as this could damage the SD card or other components. Press the red button to reboot the pi, or hold it down for five seconds to power it down. The status LED will turn red to indicate shutdown, and will turn off when safe to unplug. Unplug from the wall side rather than RPi side preferably, to reduce wear on the micro-usb port. Finally, always power down the controller before switching switching tools.
 
 Tools may connect to the pi using the 10-wire ribbon cable. By default, the pi provides 3v3, 5v, Ground, and 7 of the GPIO pins (including those used for the UART and i2c serial protocols). Note that the controller box does not provide voltage or current protection.
 Arduinos can also be attached directly over USB, and this may be preferable assuming a suitably long cable.
