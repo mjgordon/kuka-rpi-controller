@@ -7,7 +7,7 @@ import time
 ser = serial.Serial('/dev/ttyUSB0',9600)
 
 while (True):
-    ser.write(1)
+    ser.write(0b1)
     time.sleep(1)
-    ser.write(0)
+    ser.write(0b0)
     time.sleep(0.5)
