@@ -191,6 +191,8 @@ GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pre
 
 subprocess.call(['tool-files/' + tool_names[tool_id] + '/start'])
 
+# Final Loop
+# This will keep this program active if the tool subprocess crashes or finishes for whatever reason, so the power buttons and light toggle will still be usable
 
-
-
+while(True):
+    #Loop Forever
