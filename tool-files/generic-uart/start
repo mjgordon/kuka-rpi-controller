@@ -6,8 +6,12 @@ import time
 
 ser = serial.Serial('/dev/ttyUSB0',9600)
 
+def writeToArduino(value):
+    arduino.write(struct.pack('>B',value))
+    
+
 while (True):
-    ser.write((0b1,))
+    writeToArduino(0)
     time.sleep(1)
-    ser.write((0b0,))
+    writeToArduino(1)
     time.sleep(0.5)
