@@ -27,11 +27,10 @@ pin_segment_srclk = 23
 subprocess.call(['scripts/tool-permissions'])
 
 # setup logging
-open('scripts/debug.log','w').close()
-logging.basicConfig(filename='scripts/debug.log',level=logging.DEBUG)
-logging.info('=======')
-logging.info('startup')
-logging.info('=======')
+open('scripts/startup.log','w').close()
+logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG)
+logging.info('STARTUP')
+
 
 # setup pins
 
