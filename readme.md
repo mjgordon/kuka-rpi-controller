@@ -4,7 +4,7 @@ The software package for use with the RPi based ethernet controller box for the 
 
 ## Usage
 
-After plugging in the pi, the status LED will turn yellow when ready. Select the program number using the dial, and push it down to select. The status LED will turn green when the program is ready.
+After plugging in the pi, the status LED will turn yellow when ready. Select the program number using the dial, and push it down to select. Tool numbers can be found in the 'tools.txt' file. The status LED will turn green when the program is ready. Pressing the dial after this will toggle the board lights on or off. 
 
 Do not unplug the pi when it is running, as this could damage the SD card or other components. Press the red button to reboot the pi, or hold it down for five seconds to power it down. The status LED will turn red to indicate shutdown, and will turn off when safe to unplug. Unplug from the wall side rather than RPi side preferably, to reduce wear on the micro-usb port. Finally, always power down the controller before switching switching tools.
 
@@ -14,6 +14,8 @@ Arduinos can also be attached directly over USB, and this may be preferable assu
 ## Adding new tools
 
 Each tool's code should have its own folder in the tool-files directory. To make a tool selectable, add the name of the its folder to the 'tools.txt' file. At the very least, the tool folder must contain a script called 'start', which will be automatically run when the tool is selected.
+
+Many toolheads will be able to use one of the generic tool programs. generic-digital is a series of on/off switches, similar to the robot's digital IO's but at a lower voltage. generic-uart is basic serial communication; the same method the as an Arduino uses the to send messages back to your computer. generic-i2c is another serial method that allows communication with many devices at once.  
 
 ## Setting up a new RPi
 
