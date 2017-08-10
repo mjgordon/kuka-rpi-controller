@@ -1,27 +1,43 @@
 #!/usr/bin/env python3
 
+import logging
 import serial
 import socket
 import struct
 import time
 
+# === DEFINITIONS ===
+def writeInt(value):
+    ser.write(value.to_bytes(4,byteorder='little'))
 
-kukaSocket = socket.socket()
-host = socket.gethostname()
+# === MAIN SCRIPT ===
+
+# Set up logging
+logging.basicConfig(filename="uart.log",level=logging.INFO,mode='w')
+
+# Set up networking connection with robot
+kuka_socket = socket.socket()
+#host = socket.gethostname()
+host = "192.168.0.106"
 port = 52323
-s.bind((host,port))
+kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+kuka_socket.bind((host,port))
+kuka_socket.listen(5)
+logging.info(host)
 
-s.listen(5)
-
+# Set up serial connection to arduino
 ser = serial.Serial('/dev/ttyUSB0',9600)
 
-def sendByte(value):
-    ser.write(struct.pack('>B',value))
-def 
 
+              
 while (True):
-    c, addr = s.accept()
-    value = c.recv(4)
-    intValue = struct.unpack('>i',value))
 
+    c, addr = kuka_socket.accept()
+    value = c.recv(4)
+    intValue = struct.unpack('<i',value)
+    floatValue = struct.unpack('<i',value)
+    logging.info(intValue)
+    #writeInt(intValue)
     ser.write(value)
+
+    
