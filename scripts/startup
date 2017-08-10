@@ -5,7 +5,9 @@ import RPi.GPIO as GPIO
 import subprocess
 import time
 
-# define pins
+# === DEFINITIONS ===
+
+# Constant Definitions
 
 pin_rotary_a = 16
 pin_rotary_b = 20
@@ -21,6 +23,73 @@ pin_segment_ser = 25
 pin_segment_rclk = 24
 pin_segment_srclk = 23
 
+# Function Definitions
+
+
+def reset_changed():
+    """ Called by interrupt when the reset button changes. Resets or shuts down the pi based on timed held. """
+    global press_time
+    button_value = GPIO.input(pin_reset_button)
+    if (button_value == GPIO.LOW):
+        press_time = time.time()
+        time.sleep(5.1)
+        led_color(GPIO.LOW,GPIO.HIGH,GPIO.HIGH)
+    else:
+        current_time = time.time()
+        if (current_time - pressed_time < 5):
+            logging.info("rebooting now")
+            os.system('sudo shutdown -r now')
+        else:
+            logging.info("shutting down now")
+            os.system('sudo shutdown now')
+
+            
+def shift_out(data_pin,clock_pin,output_pin,number):
+    """ Sets the 7-segment LED to the passed number. """
+    #               0          1          2          3          4
+    #               5          6          7          8          9          OFF
+    number_codes = (0b01110111,0b01000001,0b00111011,0b01101011,0b01001101,
+                    0b01101110,0b01111110,0b01000011,0b01111111,0b01001111,0b00000000)
+
+    data = number_codes[number]
+    
+    GPIO.output(output_pin,GPIO.LOW)
+    for num in range(0,8):
+        output = False
+        output = data & 0b00000001
+        data = data >> 1
+        GPIO.output(data_pin,output)
+        GPIO.output(clock_pin,GPIO.HIGH)
+        #time.sleep(0.001)
+        GPIO.output(clock_pin,GPIO.LOW);
+        #time.sleep(0.001)
+    GPIO.output(output_pin,GPIO.HIGH)
+
+def led_color(r,g,b):
+    """ Helper function for changing the status LED color. """
+    GPIO.output(pin_led_r,r)
+    GPIO.output(pin_led_g,g)
+    GPIO.output(pin_led_b,b)
+    
+def rotary_button_pressed(channel):
+    """ Called by interrupt when the rotary button state changes. Declared after tool selection, so only toggles lights. """
+    global lights_on
+    lights_on = not lights_on
+    if (lights_on):
+        GPIO.output(pin_led_r, GPIO.HIGH)
+        GPIO.output(pin_led_g, GPIO.LOW)
+        GPIO.output(pin_led_b, GPIO.HIGH)
+        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
+    else:
+        GPIO.output(pin_led_r, GPIO.HIGH)
+        GPIO.output(pin_led_g, GPIO.HIGH)
+        GPIO.output(pin_led_b, GPIO.HIGH)
+        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 10)
+    logging.info("lights set to: " + str(lights_on))
+
+    
+# === MAIN SCRIPT ===
+
 # check permissions for any tool scripts
 # this is done here so users don't have to remember to do it manually
 
@@ -28,7 +97,7 @@ subprocess.call(['scripts/tool-permissions'])
 
 # setup logging
 open('scripts/startup.log','w').close()
-logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG)
+logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG,mode='w')
 logging.info('STARTUP')
 
 
@@ -49,34 +118,15 @@ GPIO.setup(pin_segment_ser,GPIO.OUT)
 GPIO.setup(pin_segment_rclk,GPIO.OUT)
 GPIO.setup(pin_segment_srclk,GPIO.OUT)
 
+
 # setup interrupts to turn off pi when with button press, negates the need for gpio-watch
 
 press_time = time.time()
-
-def reset_changed():
-    button_value = GPIO.input(pin_reset_button)
-    if (button_value == GPIO.LOW):
-        press_time = time.time()
-        time.sleep(5.1)
-        GPIO.output(pin_led_r,GPIO.LOW)
-        GPIO.output(pin_led_g,GPIO.HIGH)
-        GPIO.output(pin_led_b,GPIO.HIGH)
-    else:
-        current_time = time.time()
-        if (current_time - pressed_time < 5):
-            logging.info("rebooting now")
-            os.system('sudo shutdown -r now')
-        else:
-            logging.info("shutting down now")
-            os.system('sudo shutdown now')
-
 GPIO.add_event_detect(pin_reset_button,GPIO.BOTH, callback=reset_changed)
 
 # led is yellow while program is being chosen
 
-GPIO.output(pin_led_r,GPIO.LOW)
-GPIO.output(pin_led_g,GPIO.LOW)
-GPIO.output(pin_led_b,GPIO.HIGH)
+led_color(GPIO.LOW,GPIO.LOW,GPIO.HIGH)
 
 
 # load tool names from file
@@ -96,27 +146,7 @@ f.close()
 logging.info('default tool is ' + str(rotary_id))
 
 
-# define 7 segment control function
-
-def shift_out(data_pin,clock_pin,output_pin,number):
-    #               0          1          2          3          4
-    #               5          6          7          8          9          OFF
-    number_codes = (0b01110111,0b01000001,0b00111011,0b01101011,0b01001101,
-                    0b01101110,0b01111110,0b01000011,0b01111111,0b01001111,0b00000000)
-
-    data = number_codes[number]
-    
-    GPIO.output(output_pin,GPIO.LOW)
-    for num in range(0,8):
-        output = False
-        output = data & 0b00000001
-        data = data >> 1
-        GPIO.output(data_pin,output)
-        GPIO.output(clock_pin,GPIO.HIGH)
-        #time.sleep(0.001)
-        GPIO.output(clock_pin,GPIO.LOW);
-        #time.sleep(0.001)
-    GPIO.output(output_pin,GPIO.HIGH)
+# set the 7 segment led to the default tool number
 
 shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
 
@@ -161,39 +191,24 @@ logging.info('selected tool was ' + str(tool_id))
 
 # led is green during normal program operation
 
-GPIO.output(pin_led_r, GPIO.HIGH)
-GPIO.output(pin_led_g, GPIO.LOW)
-GPIO.output(pin_led_b, GPIO.HIGH)
+led_color(GPIO.HIGH,GPIO.LOW,GPIO.HIGH)
 
 
 # setup interrupt to toggle lights once program starts
 
 lights_on = True
-
-def rotary_button_pressed(channel):
-    global lights_on
-    lights_on = not lights_on
-    if (lights_on):
-        GPIO.output(pin_led_r, GPIO.HIGH)
-        GPIO.output(pin_led_g, GPIO.LOW)
-        GPIO.output(pin_led_b, GPIO.HIGH)
-        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, rotary_id)
-    else:
-        GPIO.output(pin_led_r, GPIO.HIGH)
-        GPIO.output(pin_led_g, GPIO.HIGH)
-        GPIO.output(pin_led_b, GPIO.HIGH)
-        shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 10)
-    logging.info("lights set to: " + str(lights_on))
-
 GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pressed,bouncetime=300)
-        
+
+
 # run code for chosen tool
 
 subprocess.call(['tool-files/' + tool_names[tool_id] + '/start'])
 
 # Final Loop
 # This will keep this program active if the tool subprocess crashes or finishes for whatever reason, so the power buttons and light toggle will still be usable
+# LED turns purple to indicate this state
+
+led_color(GPIO.LOW,GPIO.HIGH,GPIO.LOW)
 
 while(True):
-    #Loop Forever
-    dummy = 0
+    pass

@@ -7,13 +7,16 @@ import struct
 import time
 
 # === DEFINITIONS ===
+
 def writeInt(value):
     ser.write(value.to_bytes(4,byteorder='little'))
 
+    
 # === MAIN SCRIPT ===
 
 # Set up logging
 logging.basicConfig(filename="uart.log",level=logging.INFO,mode='w')
+
 
 # Set up networking connection with robot
 kuka_socket = socket.socket()
@@ -25,19 +28,27 @@ kuka_socket.bind((host,port))
 kuka_socket.listen(5)
 logging.info(host)
 
+
 # Set up serial connection to arduino
-ser = serial.Serial('/dev/ttyUSB0',9600)
+# Arduino will usually but not always be '/dev/ttyUSB0'
 
+for (i in range(4)):
+    try:
+        ser = serial.Serial('/dev/ttyUSB' + str(i),9600)
+    except Exception:
+        pass
 
-              
+    
+# Loop waiting for data from socket connection
+# May need a way to fail out of this eventually
+
 while (True):
-
     c, addr = kuka_socket.accept()
     value = c.recv(4)
     intValue = struct.unpack('<i',value)
     floatValue = struct.unpack('<i',value)
-    logging.info(intValue)
-    #writeInt(intValue)
+    logging.info("int: " + str(intValue))
+    logging.info("float: " + str(floatValue))
     ser.write(value)
 
     
