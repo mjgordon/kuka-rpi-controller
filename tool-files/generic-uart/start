@@ -32,12 +32,14 @@ logging.info(host)
 # Set up serial connection to arduino
 # Arduino will usually but not always be '/dev/ttyUSB0'
 
-for (i in range(4)):
-    try:
-        ser = serial.Serial('/dev/ttyUSB' + str(i),9600)
-    except Exception:
-        pass
+#for (i in range(4)):
+#    try:
+#        ser = serial.Serial('/dev/ttyUSB' + str(i),9600)
+#    except Exception:
+#        pass
 
+# Serial over hardware pins
+ser = serial.Serial('/dev/serial0',9600)
     
 # Loop waiting for data from socket connection
 # May need a way to fail out of this eventually
@@ -46,7 +48,7 @@ while (True):
     c, addr = kuka_socket.accept()
     value = c.recv(4)
     intValue = struct.unpack('<i',value)
-    floatValue = struct.unpack('<i',value)
+    floatValue = struct.unpack('<f',value)
     logging.info("int: " + str(intValue))
     logging.info("float: " + str(floatValue))
     ser.write(value)
