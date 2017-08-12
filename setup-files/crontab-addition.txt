@@ -1,1 +1,1 @@
-@reboot cd /home/pi/kuka-rpi-controller && scripts/startup >scripts/log.txt 2>&1
+@reboot cd /home/pi/kuka-rpi-controller && scripts/startup >scripts/cron.log 2>&1
