@@ -8,13 +8,12 @@ import socket
 host = "192.168.0.106"
 port = 52323
 
-s = socket.socket()
-s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-
 def write_int(value):
+    s = socket.socket()
+    s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
     s.connect((host,port))
     s.send((value).to_bytes(4,byteorder="little"))
-
+    s.close()
 
 
 
