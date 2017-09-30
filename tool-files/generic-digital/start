@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import logging
+import socket
+
 import RPi.GPIO as GPIO
 
 
