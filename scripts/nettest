@@ -4,8 +4,8 @@
 
 import socket
 
-#host = "192.168.2.203"
-host = "192.168.0.111"
+host = "192.168.2.203"
+#host = "192.168.0.111"
 port = 52323
 
 def write_int(value):

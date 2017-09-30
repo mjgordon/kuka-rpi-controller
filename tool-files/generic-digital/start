@@ -23,6 +23,7 @@ pin_ids = (pin_ribbon_3,pin_ribbon_4,pin_ribbon_5,pin_ribbon_6,pin_ribbon_7,pin_
 # setup pins
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 GPIO.setup(pin_ribbon_3, GPIO.OUT)
 GPIO.setup(pin_ribbon_4, GPIO.OUT)
 GPIO.setup(pin_ribbon_5, GPIO.OUT)
@@ -36,7 +37,7 @@ logging.basicConfig(filename="digital.log",level=logging.INFO,mode='w')
 
 # Set up networking connection with robot
 kuka_socket = socket.socket()
-host = "192.168.0.103"
+host = "192.168.0.114"
 port = 52323
 kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 kuka_socket.bind((host,port))
@@ -45,8 +46,11 @@ logging.info(host)
 
 while(True):
     c, addr = kuka_socket.accept()
-    value = c.recv(1)
+    value = c.recv(1)[0]
+    logging.info(value)
     mode = value & 128 == 128
+    logging.info(mode)
+    logging.info(bin(value))
     # Set all outputs
     if (mode):
         GPIO.output(pin_ribbon_3,value & 64 == 64)
@@ -59,6 +63,8 @@ while(True):
     # Set individual outputs
     else:
         pin_id = value % 8
+        if (pin_id == 7):
+            continue
         pin_value = value & 64 == 64
         GPIO.output(pin_ids[pin_id],pin_value)
 
