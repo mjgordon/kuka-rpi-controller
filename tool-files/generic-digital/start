@@ -2,6 +2,9 @@
 
 import RPi.GPIO as GPIO
 
+
+# === MAIN SCRIPT ===
+
 # define pins
 
 pin_ribbon_3 = 14
@@ -11,6 +14,8 @@ pin_ribbon_6 = 17
 pin_ribbon_7 = 4
 pin_ribbon_8 = 3
 pin_ribbon_9 = 2
+
+pin_ids = (pin_ribbon_3,pin_ribbon_4,pin_ribbon_5,pin_ribbon_6,pin_ribbon_7,pin_ribbon_8,pin_ribbon_9)
 
 # setup pins
 
@@ -24,6 +29,33 @@ GPIO.setup(pin_ribbon_8, GPIO.OUT)
 GPIO.setup(pin_ribbon_9, GPIO.OUT)
 
 
+logging.basicConfig(filename="digital.log",level=logging.INFO,mode='w')
+
+# Set up networking connection with robot
+kuka_socket = socket.socket()
+host = "192.168.0.103"
+port = 52323
+kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+kuka_socket.bind((host,port))
+kuka_socket.listen(5)
+logging.info(host)
+
 while(True):
-    #this will be the network loop
-    dummy = 1
+    c, addr = kuka_socket.accept()
+    value = c.recv(1)
+    mode = value & 128 == 128
+    # Set all outputs
+    if (mode):
+        GPIO.output(pin_ribbon_3,value & 64 == 64)
+        GPIO.output(pin_ribbon_4,value & 32 == 32)
+        GPIO.output(pin_ribbon_5,value & 16 == 16)
+        GPIO.output(pin_ribbon_6,value & 8 == 8)
+        GPIO.output(pin_ribbon_7,value & 4 == 4)
+        GPIO.output(pin_ribbon_8,value & 2 == 2)
+        GPIO.output(pin_ribbon_9,value & 1 == 1)
+    # Set individual outputs
+    else:
+        pin_id = value % 8
+        pin_value = value & 64 == 64
+        GPIO.output(pin_ids[pin_id],pin_value)
+
