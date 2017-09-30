@@ -4,8 +4,8 @@
 
 import socket
 
-#host = "192.168.2.202"
-host = "192.168.0.106"
+#host = "192.168.2.203"
+host = "192.168.0.111"
 port = 52323
 
 def write_int(value):
@@ -15,5 +15,9 @@ def write_int(value):
     s.send((value).to_bytes(4,byteorder="little"))
     s.close()
 
-
-
+def write_bytes(values):
+    s = socket.socket()
+    s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+    s.connect((host,port))
+    s.send(values)
+    s.close()
