@@ -7,7 +7,7 @@
 	</CONFIGURATION>
 	<RECEIVE>
 		<RAW>
-			<ELEMENT Tag="Buffer" Type="BYTE" Set_Flag="1" Size="4"/>
+			<ELEMENT Tag="Buffer" Type="BYTE" Set_Flag="1" Size="16b"/>
 		</RAW>
 	</RECEIVE>
 	<SEND/>
