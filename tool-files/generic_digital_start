@@ -4,7 +4,7 @@ import logging
 import socket
 
 import RPi.GPIO as GPIO
-
+from tool_util import *
 
 # === MAIN SCRIPT ===
 
@@ -32,21 +32,12 @@ GPIO.setup(pin_ribbon_7, GPIO.OUT)
 GPIO.setup(pin_ribbon_8, GPIO.OUT)
 GPIO.setup(pin_ribbon_9, GPIO.OUT)
 
+setup_logging("digital")
 
-logging.basicConfig(filename="digital.log",level=logging.INFO,filemode='w')
-
-# Set up networking connection with robot
-kuka_socket = socket.socket()
-host = "192.168.2.203"
-#host = "192.168.0.114"
-port = 52323
-kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-kuka_socket.bind((host,port))
-kuka_socket.listen(5)
-logging.info("Host at : " + host)
+socket = setup_server()
 
 while(True):
-    c, addr = kuka_socket.accept()
+    c, addr = socket.accept()
     value = c.recv(1)[0]
     mode = value & 128 == 128
     

@@ -118,8 +118,8 @@ def timestamp():
 subprocess.call(['scripts/tool-permissions'])
 
 # setup logging
-open('scripts/startup.log','w').close()
-logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG,filemode='w')
+open('logs/startup.log','w').close()
+logging.basicConfig(filename='logs/startup.log',level=logging.DEBUG,filemode='w')
 logging.info(timestamp() + ' : STARTUP')
 
 
@@ -185,8 +185,8 @@ logging.info('entering select loop')
 while (tool_id == -1):
     rotary_a = GPIO.input(pin_rotary_a)
     rotary_b = GPIO.input(pin_rotary_b)
-    if ((rotary_last_a == GPIO.LOW) and (rotary_a == GPIO.HIGH) and (time.time() - rotary_last_time > .1 )):
-        if (rotary_b == GPIO.HIGH):
+    if ((rotary_a != rotary_last_a) and (time.time() - rotary_last_time > .05 )):
+        if (rotary_b == rotary_a):
             rotary_id -= 1
             rotary_last_time = time.time()
             if (rotary_id < 0):
@@ -225,7 +225,7 @@ GPIO.add_event_detect(pin_rotary_button,GPIO.FALLING, callback=rotary_button_pre
 
 # run code for chosen tool
 
-subprocess.call(['tool-files/' + tool_names[tool_id] + '/start'])
+subprocess.call(['tool-files/' + tool_names[tool_id] + '_start'])
 
 # Final Loop
 # This will keep this program active if the tool subprocess crashes or finishes for whatever reason, so the power buttons and light toggle will still be usable
@@ -235,4 +235,4 @@ led_color(GPIO.LOW,GPIO.HIGH,GPIO.LOW)
 
 while(True):
     pass
-d
+

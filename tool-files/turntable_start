@@ -17,6 +17,7 @@ import serial
 import socket
 import time
 import RPi.GPIO as GPIO
+from tool_util import *
 
 # === DEFINITIONS ===
 
@@ -67,16 +68,9 @@ def goto(pos):
 
 # === MAIN SCRIPT ===
 
-# Set up logging
-logging.basicConfig(filename="turntable.log",level=logging.INFO,filemode='w',format= '%(message)s')
+setup_logging("turntable")
 
-# Set up networking connection with robot
-kuka_socket = socket.socket()
-host = "192.168.2.203"
-port = 52323
-kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-kuka_socket.bind((host,port))
-kuka_socket.listen(5)
+socket = setup_server()
 
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
@@ -84,15 +78,13 @@ GPIO.setwarnings(False)
 GPIO.setup(pin_ribbon_5,GPIO.OUT)
 GPIO.setup(pin_ribbon_6,GPIO.OUT)
 
-logging.info("Host : " + host)
-
 # Open serial connection to motor
 ser = connect()
 
 # Loop waiting for data from socket connection
 
 while (True):
-    c, addr = kuka_socket.accept()
+    c, addr = socket.accept()
     value = c.recv(5)
     command = value[0]
     data = int.from_bytes(value[1:5],byteorder="little",signed=True)

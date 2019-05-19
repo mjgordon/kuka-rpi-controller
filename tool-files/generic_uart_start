@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
 import logging
+import os
 import serial
 import select
 import socket
 import struct
+import sys
 import time
+
+from tool_util import *
 
 # === DEFINITIONS ===
 
@@ -32,22 +36,9 @@ def writeBytes(values):
     
 # === MAIN SCRIPT ===
 
-# Set up logging
-logging.basicConfig(filename="uart.log",level=logging.INFO,filemode='w')
+setup_logging("uart")
 
-
-# Set up networking connection with robot
-kuka_socket = socket.socket()
-#host = socket.gethostname()
-host = "192.168.0.101"
-#host = "192.168.2.203"
-port = 52323
-kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-kuka_socket.bind((host,port))
-#kuka_socket.setblocking(0)
-kuka_socket.listen(5)
-
-logging.info("Host : " + host)
+socket = setup_server()
 
 
 # Set up serial connection to arduino
@@ -58,7 +49,7 @@ ser = connect()
 # May need a way to fail out of this eventually
 
 while (True):
-    c, addr = kuka_socket.accept()
+    c, addr = socket.accept()
     logging.info("Client : " + str(addr))
     while c is not -1 :
         value = c.recv(5)

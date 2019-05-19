@@ -1,5 +1,5 @@
-generic-digital
-generic-uart
-generic-i2c
-solid-light
+generic_digital
+generic_uart
+generic_i2c
+solid_light
 turntable
