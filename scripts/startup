@@ -2,6 +2,7 @@
 
 import logging
 import RPi.GPIO as GPIO
+import os
 import subprocess
 import time
 
@@ -23,25 +24,44 @@ pin_segment_ser = 25
 pin_segment_rclk = 24
 pin_segment_srclk = 23
 
+
 # Function Definitions
 
-
-def reset_changed():
+def reset_changed(channel):
     """ Called by interrupt when the reset button changes. Resets or shuts down the pi based on timed held. """
-    global press_time
+    global reset_change_time
+    global press_state
+
     button_value = GPIO.input(pin_reset_button)
+    current_time = time.time()
+    if (button_value == press_state):
+        return
+
+    if (current_time - reset_change_time < 0.05):
+        return
+
+    #logging.info(str(press_state) + " " + str(button_value))        
+    press_state = button_value
+
+
+
     if (button_value == GPIO.LOW):
-        press_time = time.time()
-        time.sleep(5.1)
+        pass
+    elif (button_value == GPIO.HIGH):
         led_color(GPIO.LOW,GPIO.HIGH,GPIO.HIGH)
-    else:
-        current_time = time.time()
-        if (current_time - pressed_time < 5):
-            logging.info("rebooting now")
+        if (current_time - reset_change_time < 3):
+            logging.info("REBOOT")
+            logging.info("     " + str(reset_change_time))
+            logging.info("     " + str(current_time))
             os.system('sudo shutdown -r now')
         else:
-            logging.info("shutting down now")
+            logging.info("SHUTDOWN")
+            logging.info("     " + str(reset_change_time))
+            logging.info("     " + str(current_time))
             os.system('sudo shutdown now')
+
+    reset_change_time = time.time()
+
 
             
 def shift_out(data_pin,clock_pin,output_pin,number):
@@ -87,6 +107,8 @@ def rotary_button_pressed(channel):
         shift_out(pin_segment_ser,pin_segment_srclk,pin_segment_rclk, 10)
     logging.info("lights set to: " + str(lights_on))
 
+def timestamp():
+    return(str(int(time.time())))
     
 # === MAIN SCRIPT ===
 
@@ -97,8 +119,8 @@ subprocess.call(['scripts/tool-permissions'])
 
 # setup logging
 open('scripts/startup.log','w').close()
-logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG,mode='w')
-logging.info('STARTUP')
+logging.basicConfig(filename='scripts/startup.log',level=logging.DEBUG,filemode='w')
+logging.info(timestamp() + ' : STARTUP')
 
 
 # setup pins
@@ -121,7 +143,8 @@ GPIO.setup(pin_segment_srclk,GPIO.OUT)
 
 # setup interrupts to turn off pi when with button press, negates the need for gpio-watch
 
-press_time = time.time()
+reset_change_time = time.time()
+press_state = GPIO.HIGH
 GPIO.add_event_detect(pin_reset_button,GPIO.BOTH, callback=reset_changed)
 
 # led is yellow while program is being chosen
@@ -212,3 +235,4 @@ led_color(GPIO.LOW,GPIO.HIGH,GPIO.LOW)
 
 while(True):
     pass
+d

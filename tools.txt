@@ -2,3 +2,4 @@ generic-digital
 generic-uart
 generic-i2c
 solid-light
+turntable

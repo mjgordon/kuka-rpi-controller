@@ -71,4 +71,3 @@ while(True):
             continue
         pin_value = value & 64 == 64
         GPIO.output(pin_ids[pin_id],pin_value)
-

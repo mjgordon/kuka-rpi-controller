@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+
+"""
+Commands:
+0 - Set Position
+1 - Set Velocity
+2 - Set Acceleration
+3 - Set ribbon digout 5
+4 - Set ribbon digout 6
+5 - Flash ribbon digout 5
+6 - Flash ribbon digout 6
+
+"""
+
+import logging
+import serial
+import socket
+import time
+import RPi.GPIO as GPIO
+
+# === DEFINITIONS ===
+
+usb_strings = ('/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyS0','/dev/ttyS1')
+
+pin_ribbon_5 = 18
+pin_ribbon_6 = 17
+
+def connect():
+    global usb_strings
+    for s in usb_strings:
+        try:
+            s = serial.Serial(s)
+            return(s)
+        except (OSError, serial.SerialException):
+            pass
+    return(None)
+
+# This is evidently an older version of pySerial, if its ever upgraded,
+# ser.inWaiting() will need to become ser.in_waiting
+def write_line(line):
+    ser.write(bytes(line + ' ','utf8'))
+    # HAXXXX
+    # Idealy, there should be a wait to say:
+    # "wait for there to be serial data in the buffer, then read it all"
+    time.sleep(0.1)
+    while ser.inWaiting():
+        ser.read()
+
+def read_line2():
+    buffer = ""
+    while True:
+        one_byte = ser.read(1)
+        if one_byte == b'\r':
+            return buffer
+        else:
+            buffer += one_byte.decode("ascii")
+        
+def setup_motor():
+    write_line("ADT=1000")
+    write_line("VT=100000")
+    write_line("RUN")
+
+# The motor is geared such that 1000 ticks = 1 degree of rotation
+def goto(pos):
+    write_line("PT=" + str(pos))
+    write_line("G")
+
+# === MAIN SCRIPT ===
+
+# Set up logging
+logging.basicConfig(filename="turntable.log",level=logging.INFO,filemode='w',format= '%(message)s')
+
+# Set up networking connection with robot
+kuka_socket = socket.socket()
+host = "192.168.2.203"
+port = 52323
+kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+kuka_socket.bind((host,port))
+kuka_socket.listen(5)
+
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(pin_ribbon_5,GPIO.OUT)
+GPIO.setup(pin_ribbon_6,GPIO.OUT)
+
+logging.info("Host : " + host)
+
+# Open serial connection to motor
+ser = connect()
+
+# Loop waiting for data from socket connection
+
+while (True):
+    c, addr = kuka_socket.accept()
+    value = c.recv(5)
+    command = value[0]
+    data = int.from_bytes(value[1:5],byteorder="little",signed=True)
+    if command == 0:
+        logging.info("Position : " + str(data))
+        goto(data)
+        # Pause while moving to position
+        while(True):
+            ser.write(bytes('RPA ','utf8'))
+            response = read_line2()
+            if (response[0] == 'R'):
+                response = response.split(' ')[1]
+            current_position = int(float(response))
+            logging.info(current_position)
+            if current_position == data:
+                break
+        # Not exactly a useful status message
+        c.send(bytes((0,0,0,0,0)))
+            
+    elif command == 1:
+        write_line("VT=" + str(data))
+        logging.info("Set Velocity To : " + str(data))
+    elif command == 2:
+        write_line("ADT=" + str(data))
+        logging.info("Set Acceleration To : " + str(data))
+    elif command == 3:
+        GPIO.output(pin_ribbon_5,data > 0)
+    elif command == 4:
+        GPIO.output(pin_ribbon_6,data > 0)
+    elif command == 5:
+        GPIO.output(pin_ribbon_5,1)
+        time.sleep(0.5)
+        GPIO.output(pin_ribbon_5,0)
+    elif command == 6:
+        GPIO.output(pin_ribbon_6,1)
+        time.sleep(0.5)
+        GPIO.output(pin_ribbon_6,0)
