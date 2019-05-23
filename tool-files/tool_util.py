@@ -10,8 +10,8 @@ def setup_server():
     # Set up networking connection with robot
     kuka_socket = socket.socket()
     #host = socket.gethostname()
-    host = "192.168.0.101"
-    #host = "192.168.2.203"
+    #host = "192.168.0.101"
+    host = "192.168.2.203"
     port = 52323
     kuka_socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
     kuka_socket.bind((host,port))
