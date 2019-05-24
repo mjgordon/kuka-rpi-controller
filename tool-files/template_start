@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+
+"""
+Template file for rpi-kuka communication
+Sets up a network connection and receives a series of 5-byte messages from the robot.
+From there, either pass the messages unchanged to another device connected over serial etc.,
+or respond to the command locally. 
+See the generic_uart_start and turntable_start files for examples of these methods
+"""
+
+import logging
+import os
+import serial
+import select
+import socket
+import struct
+import sys
+import time
+
+from tool_util import *
+
+# Sets up logging
+# To write to the log, use logging.info()
+setup_logging("my_tool")
+
+# Creates a simple socket server. Ip address is 192.168.2.203, port is 52323
+socket = setup_server()
+
+# Creates a serial connection to the arduino (or other usb serial device)
+ser = connect_serial()
+
+# Main loop; enters a series of socket connections to the client robot
+while (True):
+    # Blocks while waiting for a client connection
+    # c is the client, addr is the client's address
+    # Logs the clients information after connection
+    c, addr = socket.accept()
+    logging.info("Client : " + str(addr))
+    # Inner loop receiving messages from robot
+    # c will become -1 during certain closed connection situations
+    # (e.g. canceling a KRL program)
+    while c is not -1 :
+        # Blocks until five bytes are received
+        # Extracts the command and data from the message
+        value = c.recv(5)
+        command = value[0]
+        data = int.from_bytes(value[1:5],byteorder="little",signed=True)
+        # value will be falsy after certain closed connection situations
+        # (e.g. EKI_CLOSE and EKI_CLEAR at the end of KRL programs)
+        if not value:
+            logging.info("End")
+            break
+        logging.info(value)
+
+        # Respond to commands
+        # Python doesn't have switch statements, so use if/elif
+
+        if command == 0:
+            pass
+        elif command == 1:
+            pass
+        
+
+    print("Connection closed")
+

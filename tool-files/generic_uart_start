@@ -11,29 +11,6 @@ import time
 
 from tool_util import *
 
-# === DEFINITIONS ===
-
-usb_strings = ('/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyACM0','/dev/ttyACM1')
-
-def connect():
-    global usb_strings
-    for s in usb_strings:
-        try:
-            s = serial.Serial(s)
-            return(s)
-        except (OSError, serial.SerialException):
-            pass
-    print("No serial connection found")
-    return(None)
-
-
-def writeInt(value):
-    ser.write(value.to_bytes(4,byteorder='little'))
-
-def writeBytes(values):
-    ser.write(bytes(values))
-
-    
 # === MAIN SCRIPT ===
 
 setup_logging("uart")
@@ -43,7 +20,7 @@ socket = setup_server()
 
 # Set up serial connection to arduino
 # Arduino will usually but not always be '/dev/ttyUSB0'
-ser = connect()
+ser = connect_serial()
 
 # Loop waiting for data from socket connection
 # May need a way to fail out of this eventually

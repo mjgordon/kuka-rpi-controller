@@ -21,20 +21,10 @@ from tool_util import *
 
 # === DEFINITIONS ===
 
-usb_strings = ('/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyS0','/dev/ttyS1')
+
 
 pin_ribbon_5 = 18
 pin_ribbon_6 = 17
-
-def connect():
-    global usb_strings
-    for s in usb_strings:
-        try:
-            s = serial.Serial(s)
-            return(s)
-        except (OSError, serial.SerialException):
-            pass
-    return(None)
 
 # This is evidently an older version of pySerial, if its ever upgraded,
 # ser.inWaiting() will need to become ser.in_waiting
@@ -79,7 +69,7 @@ GPIO.setup(pin_ribbon_5,GPIO.OUT)
 GPIO.setup(pin_ribbon_6,GPIO.OUT)
 
 # Open serial connection to motor
-ser = connect()
+ser = connect_serial()
 
 # Loop waiting for data from socket connection
 
