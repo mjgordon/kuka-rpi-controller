@@ -1,2 +1,3 @@
 *.log
 *~
+tool-files/__pycache__/
